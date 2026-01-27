@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "users",
     "lessons",
     "courses",
-    # 'rest_framework.authtoken',
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -141,3 +141,7 @@ EMAIL_HOST_PASSWORD = os.getenv("MAIL_EMAIL_HOST_PASSWORD")
 EMAIL_HOST_USER = os.getenv("MAIL_EMAIL_HOST_USER")
 
 AUTH_USER_MODEL = "users.User"
+
+REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"]
+}

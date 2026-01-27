@@ -1,6 +1,10 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.timezone import now
+
+from courses.models import Course
+from lessons.models import Lesson
 
 
 class UserManager(BaseUserManager):
@@ -33,6 +37,8 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    """описание модели пользователя"""
+
     username = None
 
     email = models.EmailField(unique=True, verbose_name="email address")
@@ -74,3 +80,62 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class Payment(models.Model):
+    """описание модели о платежах пользователей по курсам и урокам"""
+
+    CHOICES_PAYMENT_METHOD = [
+        ("cash", "Наличные"),
+        ("transfer", "Перевод на счет"),
+    ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Пользователь",
+        related_name="payments",
+    )
+    date_payment = models.DateTimeField(default=now, verbose_name="Дата платежа")
+    paid_course = models.ForeignKey(
+        Course,
+        on_delete=models.SET_NULL,
+        related_name="paid_course",
+        null=True,
+        blank=True,
+        verbose_name="Оплаченный курс",
+    )
+    paid_lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.SET_NULL,
+        related_name="paid_lesson",
+        null=True,
+        blank=True,
+        verbose_name="Оплаченный урок",
+    )
+    sum_payment = models.FloatField(
+        verbose_name="Сумма платежа", default=0.00, null=True, blank=True
+    )
+    payment_method = models.CharField(
+        max_length=30,
+        verbose_name="Способ оплаты",
+        choices=CHOICES_PAYMENT_METHOD,
+        default="Перевод на счет",
+    )
+
+    class Meta:
+        verbose_name = "Платеж"
+        verbose_name_plural = "Платежи"
+        ordering = ["date_payment"]
+        unique_together = ["user", "paid_course", "paid_lesson"]
+        indexes = [
+            models.Index(fields=["user", "paid_course", "paid_lesson"]),
+        ]
+
+        def __str__(self):
+            return (
+                f"{self.user}"
+                f"{self.date_payment}"
+                f"{self.payment_method}"
+                f" {self.sum_payment}"
+            )

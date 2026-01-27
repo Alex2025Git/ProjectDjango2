@@ -2,6 +2,8 @@ from django.db import models
 
 
 class Course(models.Model):
+    """Описание модели по курсам"""
+
     name = models.CharField(max_length=100)
     description = models.TextField()
     preview = models.ImageField(
