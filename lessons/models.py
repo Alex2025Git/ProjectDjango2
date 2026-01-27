@@ -4,6 +4,8 @@ from courses.models import Course
 
 
 class Lesson(models.Model):
+    """Описание модели по урокам"""
+
     name = models.CharField(max_length=100)
     description = models.TextField()
     preview = models.ImageField(
