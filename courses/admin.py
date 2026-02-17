@@ -5,4 +5,4 @@ from courses.models import Course
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("id", "name", "description", "owner")

@@ -1,5 +1,6 @@
 from django.db import models
 
+from config import settings
 from courses.models import Course
 
 
@@ -18,6 +19,9 @@ class Lesson(models.Model):
         null=True,
         blank=True,
         related_name="lessons",
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
     )
 
     class Meta:
