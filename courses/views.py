@@ -1,12 +1,14 @@
 from rest_framework.viewsets import ModelViewSet
 
 from courses.models import Course
+from courses.paginations import CustomPagination
 from courses.serializers import CourseDetailSerializer, CourseSerializer
 from users.permissions import IsModerator, IsOwner
 
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
+    pagination_class = CustomPagination
 
     def get_serializer_class(self):
         if self.action == "retrieve":
