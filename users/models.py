@@ -122,6 +122,20 @@ class Payment(models.Model):
         choices=CHOICES_PAYMENT_METHOD,
         default="Перевод на счет",
     )
+    session_id = models.CharField(
+        max_length=255,
+        verbose_name="Id сессии",
+        help_text="Укажите Id сессии",
+        null=True,
+        blank=True,
+    )
+    link = models.URLField(
+        max_length=450,
+        verbose_name="Cсылка на оплату",
+        help_text="Укажите cсылку на оплату",
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         verbose_name = "Платеж"

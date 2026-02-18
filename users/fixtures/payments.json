@@ -8,7 +8,9 @@
       "paid_course": 2,
       "paid_lesson": 5,
       "sum_payment": 106.0,
-      "payment_method": "cash"
+      "payment_method": "cash",
+      "session_id": null,
+      "link": null
     }
   },
   {
@@ -20,7 +22,9 @@
       "paid_course": 5,
       "paid_lesson": 1,
       "sum_payment": 348.0,
-      "payment_method": "transfer"
+      "payment_method": "transfer",
+      "session_id": null,
+      "link": null
     }
   },
   {
@@ -32,7 +36,37 @@
       "paid_course": 6,
       "paid_lesson": 4,
       "sum_payment": 300.0,
-      "payment_method": "cash"
+      "payment_method": "cash",
+      "session_id": null,
+      "link": null
+    }
+    },
+  {
+    "model": "users.payment",
+    "pk": 4,
+    "fields": {
+      "user": 7,
+      "date_payment": "2026-02-17T22:10:22.966Z",
+      "paid_course": null,
+      "paid_lesson": null,
+      "sum_payment": 1600.0,
+      "payment_method": "Перевод на счет",
+      "session_id": "cs_test_a1AQovR0itYtNSlft921sQEalucfBGRKRCvKp5fjRJrGDTxz7tEQqSRZQY",
+      "link": "https://checkout.stripe.com/c/pay/cs_test_a1AQovR0itYtNSlft921sQEalucfBGRKRCvKp5fjRJrGDTxz7tEQqSRZQY#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0UTRzU09PdVB2XW5kfFE0NHBpX2BjSHRQMl1fTWdQRmNuVUJrQFYybldHYUcxdGc2b2NENGxHTUJySE9BYDZQRlBBMn9DSUtfZmZ3dE0xY05CUzFKYHZDNTU8a11qR0p%2FUycpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl"
+    }
+  },
+  {
+    "model": "users.payment",
+    "pk": 5,
+    "fields": {
+      "user": 7,
+      "date_payment": "2026-02-17T22:10:50.357Z",
+      "paid_course": null,
+      "paid_lesson": null,
+      "sum_payment": 1600.0,
+      "payment_method": "Перевод на счет",
+      "session_id": null,
+      "link": null
     }
   }
 ]

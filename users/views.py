@@ -1,17 +1,15 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-from rest_framework.generics import (
-    CreateAPIView,
-    DestroyAPIView,
-    ListAPIView,
-    RetrieveAPIView,
-    UpdateAPIView,
-)
+from rest_framework.generics import (CreateAPIView, DestroyAPIView,
+                                     ListAPIView, RetrieveAPIView,
+                                     UpdateAPIView)
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from users.models import Payment, User
 from users.serializers import PaymentSerializer, UserSerializer
+from users.services import (create_stripe_price, create_stripe_product,
+                            create_stripe_session)
 
 
 class UserViewSet(ModelViewSet):
@@ -33,6 +31,16 @@ class UserViewSet(ModelViewSet):
 class PaymentCreateAPIView(CreateAPIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
+
+    def perform_create(self, serializer):
+        payment = serializer.save(user=self.request.user)
+        product = create_stripe_product(product_name="new product")
+        price = create_stripe_price(product, payment.sum_payment)
+        session_id, payment_link = create_stripe_session(price)
+
+        payment.session_id = session_id
+        payment.link = payment_link
+        payment.save()
 
 
 class PaymentListAPIView(ListAPIView):
