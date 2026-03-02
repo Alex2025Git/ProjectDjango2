@@ -1,9 +1,13 @@
+from rest_framework import status
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from courses.models import Course
 from courses.paginations import CustomPagination
 from courses.serializers import CourseDetailSerializer, CourseSerializer
 from users.permissions import IsModerator, IsOwner
+from users.tasks import subscription_update
 
 
 class CourseViewSet(ModelViewSet):
@@ -14,6 +18,16 @@ class CourseViewSet(ModelViewSet):
         if self.action == "retrieve":
             return CourseDetailSerializer
         return CourseSerializer
+
+    def update(self, request, pk=None):
+        course = get_object_or_404(Course, pk=pk)
+        serializer = self.get_serializer(course, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            subscription_update.delay(pk)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
         course = serializer.save()
