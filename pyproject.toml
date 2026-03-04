@@ -1,8 +1,8 @@
-[tool.poetry]
+[project]
 name = "projectdjango2"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = [{name = "test", email = "test@test.com"}]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -28,3 +28,6 @@ gevent = "^25.9.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = false
