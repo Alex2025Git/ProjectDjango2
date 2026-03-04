@@ -1,0 +1,75 @@
+services:
+  web:
+    build: .
+    container_name: django_app
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+      - static_volume:/code/static
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - POSTGRES_HOST=db
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+
+  db:
+    image: postgres:17
+    container_name: pg_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/var/lib/redis/data
+    healthcheck:
+        test: [ "CMD", "redis-cli", "ping" ]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+
+  celery:
+    build: .
+    container_name: celery
+    command: celery -A config worker --pool=solo -l info --uid 8
+    environment:
+        CELERY_BROKER_URL: redis://redis:6379/0
+        CELERY_RESULT_BACKEND: redis://redis:6379/0
+        POSTGRES_HOST: 'db'
+    depends_on:
+      - redis
+      - web
+    env_file:
+      - ./.env
+
+  celery-beat:
+    build: .
+    container_name: celery-beat
+    command: celery -A config beat -l info
+    environment:
+        CELERY_BROKER_URL: redis://redis:6379/0
+        CELERY_RESULT_BACKEND: redis://redis:6379/0
+    depends_on:
+      - redis
+      - celery
+    env_file:
+      - ./.env
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_volume:
