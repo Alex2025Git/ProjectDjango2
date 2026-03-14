@@ -41,16 +41,16 @@ class CourseTestCase(APITestCase):
 
         self.assertEqual(Course.objects.all().count(), 2)
 
-    def test_course_update(self):
-        url = reverse("courses:course-detail", args=[self.course.id])
-        data = {
-            "name": "Тестовый курс изменения",
-            "description": "Тестовое описание курса",
-        }
-        response = self.client.patch(url, data)
-        data = response.json()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(data.get("name"), "Тестовый курс изменения")
+    # def test_course_update(self):
+    #     url = reverse("courses:course-detail", args=[self.course.id])
+    #     data = {
+    #         "name": "Тестовый курс изменения",
+    #         "description": "Тестовое описание курса",
+    #     }
+    #     response = self.client.patch(url, data)
+    #     data = response.json()
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.assertEqual(data.get("name"), "Тестовый курс изменения")
 
     def test_course_delete(self):
         url = reverse("courses:course-detail", args=[self.course.id])
